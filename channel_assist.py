@@ -38,6 +38,8 @@ creat_table_if_not_exist(engine, photo.photos)
 creat_table_if_not_exist(engine, request.requests)
 
 continue_btn = TemplateMessageButton(text=deftxt.continue_btn, value=filters.continue_btn, action=0)
+ruls_btn = TemplateMessageButton(text=deftxt.ruls_btn, value=filters.ruls_btn, action=0)
+bio_btn = TemplateMessageButton(text=deftxt.bio_btn, value=filters.bio_btn, action=0)
 state_view_btn = TemplateMessageButton(text=deftxt.state_view_btn, value=filters.state_view_btn, action=0)
 insert_product_btn = TemplateMessageButton(text=deftxt.insert_product_btn, value=filters.insert_product_btn, action=0)
 # sales_report_btn = TemplateMessageButton(text=deftxt.sales_report_btn, value=filters.sales_report_btn, action=0)
@@ -62,7 +64,7 @@ def welcom(bot, update):
 def admin_menu(bot, update):
     message = TextMessage(deftxt.admin_menu)
     btn_list = [
-        buy_btn, state_view_btn, insert_product_btn,  # sales_report_btn
+        buy_btn, state_view_btn, insert_product_btn, ruls_btn, bio_btn  # sales_report_btn
     ]
     template_message = TemplateMessage(general_message=message, btn_list=btn_list)
     user_peer = get_user(update)
@@ -72,7 +74,7 @@ def admin_menu(bot, update):
 def user_menu(bot, update):
     message = TextMessage(deftxt.user_menu)
     btn_list = [
-        buy_btn, state_view_btn
+        buy_btn, state_view_btn, ruls_btn, bio_btn
     ]
     template_message = TemplateMessage(general_message=message, btn_list=btn_list)
     user_peer = get_user(update)
@@ -304,6 +306,28 @@ def send_state_request(bot, update):
             bad_prd_id(bot, update)
     else:
         bad_input(bot, update)
+
+
+@dispatcher.message_handler(TemplateResponseFilter(keywords=[filters.ruls_btn]))
+def ruls(bot, update):
+    user_peer = get_user(update)
+    btn_list = [
+        continue_btn
+    ]
+    message = TextMessage(deftxt.ruls)
+    template_message = TemplateMessage(general_message=message, btn_list=btn_list)
+    bot.send_message(template_message, user_peer, success_callback=success, failure_callback=failure)
+
+
+@dispatcher.message_handler(TemplateResponseFilter(keywords=[filters.bio_btn]))
+def bio(bot, update):
+    user_peer = get_user(update)
+    btn_list = [
+        continue_btn
+    ]
+    message = TextMessage(deftxt.bio)
+    template_message = TemplateMessage(general_message=message, btn_list=btn_list)
+    bot.send_message(template_message, user_peer, success_callback=success, failure_callback=failure)
 
 
 def function_cancel(bot, update):
