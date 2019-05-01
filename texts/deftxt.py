@@ -23,10 +23,12 @@ ruls = 'قانون هایی که دارید اینجا ذکر میشه. مهمت
        'ذکر بشه. '
 author = 'نویسنده بات: @ad_newD'
 bio = 'اینجا درباره کانال و فروشگاه یه توضیحات و بیوگرافی می‌تونید بنویسید. \n\n\n\n {}'.format(author)
+support = 'در صورت بروز هر گونه مشکل می‌توانید با شناسه پشتیبانی به آدرس {} در میان بگذارید.'.format(support_user_name)
 
 continue_btn = 'ادامه'
 ruls_btn = 'قوانین'
 bio_btn = 'درباره'
+support_btn = 'پشتیبانی'
 sales_report_btn = 'گذارش فروش'
 buy_btn = 'خرید'
 insert_product_btn = 'افزودن محصول جدید'
