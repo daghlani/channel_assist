@@ -39,6 +39,7 @@ creat_table_if_not_exist(engine, request.requests)
 
 continue_btn = TemplateMessageButton(text=deftxt.continue_btn, value=filters.continue_btn, action=0)
 ruls_btn = TemplateMessageButton(text=deftxt.ruls_btn, value=filters.ruls_btn, action=0)
+support_btn = TemplateMessageButton(text=deftxt.support_btn, value=filters.support_btn, action=0)
 bio_btn = TemplateMessageButton(text=deftxt.bio_btn, value=filters.bio_btn, action=0)
 state_view_btn = TemplateMessageButton(text=deftxt.state_view_btn, value=filters.state_view_btn, action=0)
 insert_product_btn = TemplateMessageButton(text=deftxt.insert_product_btn, value=filters.insert_product_btn, action=0)
@@ -64,7 +65,7 @@ def welcom(bot, update):
 def admin_menu(bot, update):
     message = TextMessage(deftxt.admin_menu)
     btn_list = [
-        buy_btn, state_view_btn, insert_product_btn, ruls_btn, bio_btn  # sales_report_btn
+        buy_btn, state_view_btn, insert_product_btn, ruls_btn, bio_btn, support_btn  # sales_report_btn
     ]
     template_message = TemplateMessage(general_message=message, btn_list=btn_list)
     user_peer = get_user(update)
@@ -74,7 +75,7 @@ def admin_menu(bot, update):
 def user_menu(bot, update):
     message = TextMessage(deftxt.user_menu)
     btn_list = [
-        buy_btn, state_view_btn, ruls_btn, bio_btn
+        buy_btn, state_view_btn, ruls_btn, bio_btn, support_btn
     ]
     template_message = TemplateMessage(general_message=message, btn_list=btn_list)
     user_peer = get_user(update)
@@ -257,9 +258,6 @@ def get_purchase_request_payment(bot, update):
         count = int(receipt.regarding.split('\n')[2].split()[2].split("*")[1])
         amount = receipt.amount
         description = receipt.description
-        logger.info(
-            'get_purchase_request_payment :{user_id : %s, receipt: %s, request_id: %s}' % user_id, receipt, request_id
-        )
         insert_request(user_id=user_id, request_id=request_id, count=count, amount=amount, description=description)
         message = TextMessage(deftxt.payment_done)
         btn_list = [
@@ -270,6 +268,9 @@ def get_purchase_request_payment(bot, update):
         bot.send_message(template_message, user_peer, success_callback=success, failure_callback=failure)
         bot.send_message(TextMessage('*' + request_id + '*'), user_peer, success_callback=success,
                          failure_callback=failure)
+        logger.info(
+            'get_purchase_request_payment :{user_id : %s, receipt: %s, request_id: %s}' % (user_id, receipt, request_id)
+        )
         dispatcher.finish_conversation(update)
 
 
@@ -326,6 +327,28 @@ def bio(bot, update):
         continue_btn
     ]
     message = TextMessage(deftxt.bio)
+    template_message = TemplateMessage(general_message=message, btn_list=btn_list)
+    bot.send_message(template_message, user_peer, success_callback=success, failure_callback=failure)
+
+
+@dispatcher.message_handler(TemplateResponseFilter(keywords=[filters.support_btn]))
+def support(bot, update):
+    user_peer = get_user(update)
+    btn_list = [
+        continue_btn
+    ]
+    message = TextMessage(deftxt.support)
+    template_message = TemplateMessage(general_message=message, btn_list=btn_list)
+    bot.send_message(template_message, user_peer, success_callback=success, failure_callback=failure)
+
+
+@dispatcher.default_handler()
+def default(bot, update):
+    user_peer = get_user(update)
+    btn_list = [
+        continue_btn
+    ]
+    message = TextMessage(deftxt.start_and_welcom)
     template_message = TemplateMessage(general_message=message, btn_list=btn_list)
     bot.send_message(template_message, user_peer, success_callback=success, failure_callback=failure)
 
